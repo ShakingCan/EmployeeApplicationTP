@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,21 +20,35 @@ namespace EmployeeApplicationTP
 
         private void computebtn_Click(object sender, EventArgs e)
         {
-            bool condition = string.IsNullOrWhiteSpace(firstnamebox.Text) && string.IsNullOrWhiteSpace(lastnamebox.Text) && string.IsNullOrWhiteSpace(jobtitlebox.Text) && string.IsNullOrWhiteSpace(departmentbox.Text) && string.IsNullOrWhiteSpace(ratebox.Text) && string.IsNullOrWhiteSpace(totalbox.Text);
-            if (condition) { 
-            MessageBox.Show("Please fill in all of the text fields");
+            string pattern = @"^[0-9]+$";
+            bool condition = string.IsNullOrWhiteSpace(firstnamebox.Text) && string.IsNullOrWhiteSpace(lastnamebox.Text) && string.IsNullOrWhiteSpace(jobtitlebox.Text) && string.IsNullOrWhiteSpace(departmentbox.Text)&&string.IsNullOrWhiteSpace(ratebox.Text) && string.IsNullOrWhiteSpace(totalbox.Text);
+          
+            if (condition) {
+                MessageBox.Show("Please fill in all of the text fields accordingly");
                 return;
+
+
+            }
+            if (!Regex.IsMatch(ratebox.Text, pattern))
+            {
+                MessageBox.Show("Please enter a valid number for the rate per hour.");
+            }
+            if (!Regex.IsMatch(totalbox.Text, pattern))
+            {
+                MessageBox.Show("Please enter a valid number for the total hours worked.");
             }
             else
             {
+               
                 PartTimeEmployee employee = new PartTimeEmployee(firstnamebox.Text, lastnamebox.Text, departmentbox.Text, jobtitlebox.Text);
                 employee.computeSalary(int.Parse(totalbox.Text), double.Parse(ratebox.Text));
                 employee.getSalary();
 
-                fnlbl.Text = "First name: "+employee.FirstName;
+                fnlbl.Text = "First name: " + employee.FirstName;
                 lnlbl.Text = "Last name: " + employee.LastName;
                 bslbl.Text = "Basic Salary: " + employee.BasicSalary;
             }
+
 
 
         }
